@@ -1,3 +1,4 @@
+import RPi.GPIO as GPIO
 import random
 
 TERRITORY = [
@@ -19,10 +20,25 @@ EXPANSION2 = [
             [[0,0], [0,0], [0,0]]               
         ]
 
+def printBoard(ledPins, playerBoard):
+    for yAxis in range(3):
+        for xAxis in range(3):
+            #Pull pin numbers
+            redLed = ledPins[yAxis][xAxis][0]
+            greenLed = ledPins[yAxis][xAxis][1]
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(redLed, GPIO.OUT, initial=0)
+            GPIO.setup(greenLed, GPIO.OUT, initial=0)
+            #Make led go high or low
+            GPIO.output(redLed, playerBoard[yAxis][xAxis][0])
+            GPIO.output(greenLed, playerBoard[yAxis][xAxis][1])
+
+
+
 def convertLetterNum(letter):
-    if letter == "a":
+    if letter == "a" or letter == "A":
         return 0
-    elif letter == "b":
+    elif letter == "b" or letter == "B":
         return 1
     else:
         return 2
@@ -39,32 +55,109 @@ def redefinition(player):
     while True:
         prismatic = input("Place your 1x1 ship (Ex 1A or A1): ")
         light = input("Place your first 2x1 ship coordinate (Ex A1 or 1A): ")
-        dark = input("Place your second 2x1 ship coordinate (Ex B1 or 2A)")
+        dark = input("Place your second 2x1 ship coordinate (Ex B1 or 2A): ")
 
-        if light == prismatic or dark == prismatic:
+        if light == prismatic or dark == prismatic or dark == light:
 
-            print("Everybody knows you can't stack ships. Try again.")
+            print("You can't stack ships. Try again.")
 
         else:
 
-            if light.split[0] == str and int(light.split[1]) == int:
+            traveler = condCheck(light)
+            
+            witness = condCheck(dark)
 
-                if light.split[0].upper() != "A" or light.split[0].upper() != "B" or light.split[0].upper() != "C":
-                    print("This is as far as you go. Please input coordinates within bounds.")
-                elif int(light.split[1]) != 1 or 2 or 3:
-                    print("This is as far as you go. Please input coordinates within bounds.")
+            if traveler == 0 or witness == 0:
 
-            if int(light.split[0]) == int and light.split[1] == str:
+                print("You've input incorrect coordinates. Try again.")
+                continue
+        
+            if traveler == 0.5:
+                
+                # 1A --> A1
+                formatA = light[1]
+                formatB = light[0]
+                triumph = formatA + formatB
+                light = triumph.strip(" ")
+                
+            if witness == 0.5:
 
-                if int(light.split[0]) != 1 or int(light.split[0]) != 2 or int(light.split[0]) != 3:
-                    print()
-                elif light.split[1].upper() != "A" or light.split[1].upper() != "B" or light.split[1].upper() != "C":
-                    print()
+                # 1A --> A1
+                formatA = dark[1]
+                formatB = dark[0]
+                nightfall = formatA + formatB
+                dark = nightfall.strip(" ")
+            
+            if int(light[1]) == 1 and int(dark[1]) == 3 or int(light[1]) == 3 and int(dark[1]) == 1:
 
+                print("Your coordinates list your 2x1 ship as 2 separate entities, which isn't allowed nor possible. Try again.")
+                continue
 
-def game_start():
+            elif light[0] == "A" and dark[0] == "C" or light[0] == "C" and dark[0] == "A":
 
+                print("Your coordinates list your 2x1 ship as 2 separate entities, which isn't allowed nor possible. Try again.")
+                continue
+            
+            else:
+
+                if player == "Player 1":
+
+                    EXPANSION1(prismatic)
+                    EXPANSION1[light]
+                    EXPANSION1[dark]
+
+                else:
+
+                    EXPANSION2.append(prismatic)
+                    EXPANSION2.append(light)
+                    EXPANSION2.append(dark)
+
+#running the game loop
+def pleiades():
     print()
+
+
+def game_set():
+    print()
+
+def condCheck(paracausal):
+    
+    consciousness = 0
+    Guardian = .5
+    diety = 1
+
+    # If the format is correct (LetterNumber) or (NumberLetter)
+    if type(paracausal[0]) == type(str) and type(paracausal[1]) == type(int):
+
+        # If they are within range (A-C) or (1-3)
+        if paracausal[0].upper() != "A" or paracausal[0].upper() != "B" or paracausal[0].upper() != "C":
+
+            return consciousness
+
+        elif int(paracausal[1]) != 0 or int(paracausal[1]) != 1 or int(paracausal[1]) != 2:
+
+            return consciousness
+
+        else:
+
+            return diety
+
+    elif type(paracausal[0]) == type(int) and type(paracausal[1]) == type(str):
+
+        if int(paracausal[0]) != 0 or int(paracausal[0]) != 1 or int(paracausal[0]) != 2:
+
+            return consciousness
+
+        elif paracausal[1].upper() != "A" or paracausal[1].upper() != "B" or paracausal[1].upper() != "C":
+
+            return consciousness
+
+        else:
+
+            return Guardian
+    else:
+
+        return consciousness
 
 def coin_toss():
 
@@ -116,13 +209,9 @@ def main():
     player2 = input("What is player 2's name: ")
     redefinition(player2)
     print("First moves goes to the winner of a coin toss. Player 1 & 2 are heads and tails respectively.")
-    player = coin_toss()
+    player, = coin_toss()
     # Split turns into player 1 and player 2 turns
-    decision = atk()
-    hitreg(decision, player)
-
-    decision = atk()
-    hitreg(decision, player)
+    
 
 
     
