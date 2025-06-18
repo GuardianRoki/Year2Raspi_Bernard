@@ -1,3 +1,4 @@
+import RPi.GPIO as GPIO
 import random
 
 TERRITORY = [
@@ -18,8 +19,19 @@ EXPANSION2 = [
             [[0,0], [0,0], [0,0]],
             [[0,0], [0,0], [0,0]]               
         ]
-def showBoard():
-    print()
+
+def printBoard(ledPins, playerBoard):
+    for yAxis in range(3):
+        for xAxis in range(3):
+            #Pull pin numbers
+            redLed = ledPins[yAxis][xAxis][0]
+            greenLed = ledPins[yAxis][xAxis][1]
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(redLed, GPIO.OUT, initial=0)
+            GPIO.setup(greenLed, GPIO.OUT, initial=0)
+            #Make led go high or low
+            GPIO.output(redLed, playerBoard[yAxis][xAxis][0])
+            GPIO.output(greenLed, playerBoard[yAxis][xAxis][1])
 
 
 
