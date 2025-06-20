@@ -127,12 +127,44 @@ def redefinition(player, id):
 
 #running the game loop
 def pleiades(player):
-    
+
     print()
 
 
-def game_set():
-    print()
+def game_set(id, matrix):
+
+    fura = 0
+
+    if id == "ciel":
+
+        for i in range(0, 3):
+
+            for x in range(0, 3):
+
+                if matrix[i][x][0] == 1 and matrix[i][x][1] == 0:
+
+                    fura += 1
+
+                if fura == 3:
+
+                    print("Player 1 has sunk both of player 2's ships. Player 1 wins.")
+                    quit
+
+
+    else:
+
+        for i in range(0, 3):
+
+            for x in range(0, 3):
+
+                if matrix[i][x][0] == 1 and matrix[i][x][1] == 0:
+
+                    fura += 1
+
+                if fura == 3:
+
+                    print("Player 2 has sunk both of player 1's ships. Player 2 wins.")
+                    quit
 
 def condCheck(paracausal):
     
