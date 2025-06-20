@@ -1,31 +1,70 @@
+import RPi.GPIO as GPIO
 import random
 
-TERRITORY = [[4, 17], [23, 18], [21, 20], 
-             [27, 22], [15, 14], [16, 12], 
-             [5, 6], [19, 13], [25, 24]]
+TERRITORY = [
+            [[4, 17], [23, 18], [21, 20]], 
+            [[27, 22], [15, 14], [16, 12]], 
+            [[5, 6], [19, 13], [25, 24]]
+            ]
 
-EXPANSION1 = []
-EXPANSION2 = []
+#LED goes red and then green.
+EXPANSION1 = [
+            [[0,0], [0,0], [0,0]],
+            [[0,0], [0,0], [0,0]],
+            [[0,0], [0,0], [0,0]]               
+        ]
+
+EXPANSION2 = [
+            [[0,0], [0,0], [0,0]],
+            [[0,0], [0,0], [0,0]],
+            [[0,0], [0,0], [0,0]]               
+        ]
+
+def printBoard(ledPins, playerBoard):
+    for yAxis in range(3):
+        for xAxis in range(3):
+            #Pull pin numbers
+            redLed = ledPins[yAxis][xAxis][0]
+            greenLed = ledPins[yAxis][xAxis][1]
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(redLed, GPIO.OUT, initial=0)
+            GPIO.setup(greenLed, GPIO.OUT, initial=0)
+            #Make led go high or low
+            GPIO.output(redLed, playerBoard[yAxis][xAxis][0])
+            GPIO.output(greenLed, playerBoard[yAxis][xAxis][1])
+
+
+
+def convertLetterNum(letter):
+    if letter == "a" or letter == "A":
+        return 0
+    elif letter == "b" or letter == "B":
+        return 1
+    else:
+        return 2
 
 def matrix():
 
 
     print()
 
-# Ship creation/placement
-def redefinition(player):
+#ship placement
+def redefinition(player, id):
 
     print(f"{player}, define your board. You have one 1x1 and one 2x1 ship.")
+    # While loop in case of improper inputs
     while True:
-        prismatic = input("Place your 1x1 ship (Ex 1A or A1): ")
-        light = input("Place your first 2x1 ship coordinate (Ex A1 or 1A): ")
-        dark = input("Place your second 2x1 ship coordinate (Ex B1 or 2A): ")
+        prismatic = input("Place your 1x1 ship (Ex A0): ")
+        light = input("Place your first 2x1 ship coordinate (Ex A1): ")
+        dark = input("Place your second 2x1 ship coordinate (Ex A2): ")
 
         if light == prismatic or dark == prismatic or dark == light:
 
             print("You can't stack ships. Try again.")
 
         else:
+
+            # Takes user inputs and runs it into function to check if input format & values are correct
 
             traveler = condCheck(light)
             
@@ -52,7 +91,7 @@ def redefinition(player):
                 nightfall = formatA + formatB
                 dark = nightfall.strip(" ")
             
-            if int(light[1]) == 1 and int(dark[1]) == 3 or int(light[1]) == 3 and int(dark[1]) == 1:
+            if int(light[1]) == 0 and int(dark[1]) == 2 or int(light[1]) == 2 and int(dark[1]) == 0:
 
                 print("Your coordinates list your 2x1 ship as 2 separate entities, which isn't allowed nor possible. Try again.")
                 continue
@@ -64,25 +103,35 @@ def redefinition(player):
             
             else:
 
-                if player == "Player 1":
+                if id == "ciel":
 
-                    EXPANSION1.append(prismatic)
-                    EXPANSION1[light]
-                    EXPANSION1[dark]
+                    huma = convertLetterNum(prismatic[0])
+                    EXPANSION1[huma][int(prismatic[1])]
+
+                    jiwald = convertLetterNum(light[0])
+                    EXPANSION1[jiwald][int(light[1])]
+
+                    shamak = convertLetterNum(dark[0])
+                    EXPANSION1[shamak][int(dark[1])]
 
                 else:
 
-                    EXPANSION2.append(prismatic)
-                    EXPANSION2.append(light)
-                    EXPANSION2.append(dark)
+                    huma = convertLetterNum(prismatic[0])
+                    EXPANSION2[huma][int(prismatic[1])]
 
+                    jiwald = convertLetterNum(light[0])
+                    EXPANSION2[jiwald][int(light[1])]
 
-def pleiades():
+                    shamak = convertLetterNum(dark[0])
+                    EXPANSION2[shamak][int(dark[1])]
 
+#running the game loop
+def pleiades(player):
+    
     print()
 
-def game_set():
 
+def game_set():
     print()
 
 def condCheck(paracausal):
@@ -91,10 +140,10 @@ def condCheck(paracausal):
     Guardian = .5
     diety = 1
 
-    # If the format is correct (LetterNumber) or (NumberLetter)
+    # If the format is correct (LetterNumber) & values are correct, returns correct
     if type(paracausal[0]) == type(str) and type(paracausal[1]) == type(int):
 
-        # If they are within range (A-C) or (1-3)
+        # If they are within range (A-C) or (0-2)
         if paracausal[0].upper() != "A" or paracausal[0].upper() != "B" or paracausal[0].upper() != "C":
 
             return consciousness
@@ -107,6 +156,7 @@ def condCheck(paracausal):
 
             return diety
 
+    # IF the format is wrong but values are correct, returns partially correct
     elif type(paracausal[0]) == type(int) and type(paracausal[1]) == type(str):
 
         if int(paracausal[0]) != 0 or int(paracausal[0]) != 1 or int(paracausal[0]) != 2:
@@ -122,8 +172,8 @@ def condCheck(paracausal):
             return Guardian
     else:
 
+        # If the values are wrong, returns incorrect
         return consciousness
-
 
 def coin_toss():
 
@@ -135,42 +185,35 @@ def coin_toss():
 
 # Combat functions
 
-def atk():
-
-    reg = input("Select your target coordinates (Ex. 1A or A1): ")
+def atk(board):
     rbd = True
+
     while rbd == True:
-        if type(reg.split[0]) == type(str) and type(reg.split[1]) == type(int):
-            # If they input A1 or something similar
-            xCoor = reg.split[0]
-            yCoor = reg.split[1]
-            format = (xCoor,yCoor)
-            # Returns (Letter, Number)
-            rbd = False
-        elif int(reg.split[0]) == int and reg.split[1] == str:
-            # If they input 1A or something similar
-            xCoor = reg.split[1]
-            yCoor = reg.split[0]
-            format = (yCoor,xCoor)
-            # Returns (Letter,Number)
-            rbd = False
-        else:
-            print("You've input improper coordinates. Please retry.")
-            rbd = True
-    return format
+        userShot = input("Select your target coordinates (Ex. A1): ").strip()
 
-# def hitreg(decision, player):
+        try:
+            userShotStr = userShot[0].lower()
+            if userShotStr == "a" or userShotStr == "b" or userShotStr == "c":
+                userShotInt = int(userShot[1])
+                if userShotInt >= 1 and userShotInt <= 3:
+                    shipCordX = userShotStr
+                    shipCordY = userShotInt - 1
+                    
+                    shipCordX = convertLetterNum(shipCordX)
+                
+                    ledList = board[shipCordX][shipCordY]
+                    if (ledList[0] == 1 and ledList[1] == 1) or (ledList[0] == 1 and ledList[1] == 0):
+                        raise ZeroDivisionError
+                    elif (ledList[0] == 0 and ledList[1] == 0): 
+                        print("You have missed the target.")
+                    elif ledList[0] == 0 and ledList[1] == 1:
+                        print("You have hit a ship!")
 
-#     if player == "Player 1":
-        
-#         if decision.split[0] == 
-#     else:
+        except ZeroDivisionError:
+            print("You have entered in a location that has already been hit.")
+        except:
+            print("You have entered in invalid coordinates please try again.")
 
-#         print()
-
-def miss():
-
-    print()
 
 # Main function
 
@@ -178,21 +221,18 @@ def main():
 
     matrix()
     player1 = input("What is player 1's name: ")
-    redefinition(player1)
+    id1 = "ciel"
+    redefinition(player1, id1)
+
     player2 = input("What is player 2's name: ")
-    redefinition(player2)
+    id2 = "tempest"
+    redefinition(player2, id2)
+
     print("First moves goes to the winner of a coin toss. Player 1 & 2 are heads and tails respectively.")
     player = coin_toss()
+    pleiades(player)
     # Split turns into player 1 and player 2 turns
-    decision = atk()
-    # hitreg(decision, player)
-
-    decision = atk()
-    # hitreg(decision, player)
-
-
     
-
 
 
 
