@@ -60,19 +60,22 @@ def convertLetterNum(letter):
         return 2
 
 #ship placement
-def redefinition(player):
+def redefinition(player, id):
 
     print(f"{player}, define your board. You have one 1x1 and one 2x1 ship.")
+    # While loop in case of improper inputs
     while True:
-        prismatic = input("Place your 1x1 ship (Ex 1A or A1): ")
-        light = input("Place your first 2x1 ship coordinate (Ex A1 or 1A): ")
-        dark = input("Place your second 2x1 ship coordinate (Ex B1 or 2A): ")
+        prismatic = input("Place your 1x1 ship (Ex A0): ")
+        light = input("Place your first 2x1 ship coordinate (Ex A1): ")
+        dark = input("Place your second 2x1 ship coordinate (Ex A2): ")
 
         if light == prismatic or dark == prismatic or dark == light:
 
             print("You can't stack ships. Try again.")
 
         else:
+
+            # Takes user inputs and runs it into function to check if input format & values are correct
 
             traveler = condCheck(light)
             
@@ -99,7 +102,7 @@ def redefinition(player):
                 nightfall = formatA + formatB
                 dark = nightfall.strip(" ")
             
-            if int(light[1]) == 1 and int(dark[1]) == 3 or int(light[1]) == 3 and int(dark[1]) == 1:
+            if int(light[1]) == 0 and int(dark[1]) == 2 or int(light[1]) == 2 and int(dark[1]) == 0:
 
                 print("Your coordinates list your 2x1 ship as 2 separate entities, which isn't allowed nor possible. Try again.")
                 continue
@@ -111,17 +114,63 @@ def redefinition(player):
             
             else:
 
-                if player == "Player 1":
+                if id == "ciel":
 
-                    EXPANSION1(prismatic)
-                    EXPANSION1[light]
-                    EXPANSION1[dark]
+                    huma = convertLetterNum(prismatic[0])
+                    EXPANSION1[huma][int(prismatic[1])]
+
+                    jiwald = convertLetterNum(light[0])
+                    EXPANSION1[jiwald][int(light[1])]
+
+                    shamak = convertLetterNum(dark[0])
+                    EXPANSION1[shamak][int(dark[1])]
 
                 else:
 
-                    EXPANSION2.append(prismatic)
-                    EXPANSION2.append(light)
-                    EXPANSION2.append(dark)
+                    huma = convertLetterNum(prismatic[0])
+                    EXPANSION2[huma][int(prismatic[1])]
+
+                    jiwald = convertLetterNum(light[0])
+                    EXPANSION2[jiwald][int(light[1])]
+
+                    shamak = convertLetterNum(dark[0])
+                    EXPANSION2[shamak][int(dark[1])]
+
+def game_set(id, matrix):
+
+    fura = 0
+
+    if id == "ciel":
+
+        for i in range(0, 3):
+
+            for x in range(0, 3):
+
+                if matrix[i][x][0] == 1 and matrix[i][x][1] == 0:
+
+                    fura += 1
+
+                if fura == 3:
+
+                    print("Player 1 has sunk both of player 2's ships. Player 1 wins.")
+                    quit()
+
+
+    else:
+
+        for i in range(0, 3):
+
+            for x in range(0, 3):
+
+                if matrix[i][x][0] == 1 and matrix[i][x][1] == 0:
+
+                    fura += 1
+
+                if fura == 3:
+
+                    print("Player 2 has sunk both of player 1's ships. Player 2 wins.")
+                    quit()
+
 
 #running the game loop
 def pleiades(player):
@@ -157,8 +206,6 @@ def pleiades(player):
             if counter >= 3:
                 game_set(playerID, EXPANSION2)
         counter += 1
-def game_set():
-    print()
 
 def condCheck(paracausal):
     
@@ -166,10 +213,10 @@ def condCheck(paracausal):
     Guardian = .5
     diety = 1
 
-    # If the format is correct (LetterNumber) or (NumberLetter)
+    # If the format is correct (LetterNumber) & values are correct, returns correct
     if type(paracausal[0]) == type(str) and type(paracausal[1]) == type(int):
 
-        # If they are within range (A-C) or (1-3)
+        # If they are within range (A-C) or (0-2)
         if paracausal[0].upper() != "A" or paracausal[0].upper() != "B" or paracausal[0].upper() != "C":
 
             return consciousness
@@ -182,6 +229,7 @@ def condCheck(paracausal):
 
             return diety
 
+    # IF the format is wrong but values are correct, returns partially correct
     elif type(paracausal[0]) == type(int) and type(paracausal[1]) == type(str):
 
         if int(paracausal[0]) != 0 or int(paracausal[0]) != 1 or int(paracausal[0]) != 2:
@@ -197,6 +245,7 @@ def condCheck(paracausal):
             return Guardian
     else:
 
+        # If the values are wrong, returns incorrect
         return consciousness
 
 def coin_toss():
@@ -251,9 +300,13 @@ def atk(board, seenBoard):
 def main():
 
     player1 = input("What is player 1's name: ")
-    redefinition(player1)
+    id1 = "ciel"
+    redefinition(player1, id1)
+
     player2 = input("What is player 2's name: ")
-    redefinition(player2)
+    id2 = "tempest"
+    redefinition(player2, id2)
+
     print("First moves goes to the winner of a coin toss. Player 1 & 2 are heads and tails respectively.")
     player = coin_toss()
     pleiades(player)
