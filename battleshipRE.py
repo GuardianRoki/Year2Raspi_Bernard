@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import random
+import time
 
 TERRITORY = [
             [[4, 17], [23, 18], [21, 20]], 
@@ -148,7 +149,7 @@ def game_set(id, matrix):
                 if fura == 3:
 
                     print("Player 1 has sunk both of player 2's ships. Player 1 wins.")
-                    quit
+                    quit()
 
 
     else:
@@ -164,7 +165,7 @@ def game_set(id, matrix):
                 if fura == 3:
 
                     print("Player 2 has sunk both of player 1's ships. Player 2 wins.")
-                    quit
+                    quit()
 
 def condCheck(paracausal):
     
