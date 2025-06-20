@@ -19,22 +19,22 @@ EXPANSION2 = [
             [[0,0], [0,0], [0,0]],
             [[0,0], [0,0], [0,0]],
             [[0,0], [0,0], [0,0]]               
-        ]
+            ]
 
-EXPANSION1EnemeyBoard = [
+EXPANSION1EnemyBoard = [
                         [[0,0], [0,0], [0,0]],
                         [[0,0], [0,0], [0,0]],
                         [[0,0], [0,0], [0,0]]               
                         ]
 
-EXPANSION2EnemeyBoard = [
+EXPANSION2EnemyBoard = [
                         [[0,0], [0,0], [0,0]],
                         [[0,0], [0,0], [0,0]],
                         [[0,0], [0,0], [0,0]]               
                         ]
 
 def wait():
-    for i in range(3, 1, -1):
+    for i in range(3, 0, -1):
         print("Next turn in ", i)
         time.sleep(1)
 
@@ -117,24 +117,68 @@ def redefinition(player, id):
                 if id == "ciel":
 
                     huma = convertLetterNum(prismatic[0])
-                    EXPANSION1[huma][int(prismatic[1])]
+                    EXPANSION1[huma][int(prismatic[1])][1] = 1
 
                     jiwald = convertLetterNum(light[0])
-                    EXPANSION1[jiwald][int(light[1])]
+                    EXPANSION1[jiwald][int(light[1])][1] = 1
 
                     shamak = convertLetterNum(dark[0])
-                    EXPANSION1[shamak][int(dark[1])]
+                    EXPANSION1[shamak][int(dark[1])][1] = 1
+                    break
 
                 else:
 
                     huma = convertLetterNum(prismatic[0])
-                    EXPANSION2[huma][int(prismatic[1])]
+                    EXPANSION2[huma][int(prismatic[1])][1] = 1
 
                     jiwald = convertLetterNum(light[0])
-                    EXPANSION2[jiwald][int(light[1])]
+                    EXPANSION2[jiwald][int(light[1])][1] = 1
 
                     shamak = convertLetterNum(dark[0])
-                    EXPANSION2[shamak][int(dark[1])]
+                    EXPANSION2[shamak][int(dark[1])][1] = 1
+                    break
+
+#running the game loop
+def pleiades(player):
+    counter = 1
+    while True:
+        if player == "Player 1":
+            playerID = "ciel"
+            printBoard(TERRITORY, EXPANSION2EnemyBoard)
+            atk(EXPANSION2, EXPANSION2EnemyBoard)
+            printBoard(TERRITORY, EXPANSION2EnemyBoard)
+            if counter >= 3:
+                game_set(playerID, EXPANSION2)
+            wait()
+            print("Player 2's turn:")
+            playerID = "tempest"
+            printBoard(TERRITORY, EXPANSION1EnemyBoard)
+            atk(EXPANSION1, EXPANSION1EnemyBoard)
+            printBoard(TERRITORY, EXPANSION1EnemyBoard)
+            if counter >= 3:
+                game_set(playerID, EXPANSION1)
+            wait()
+            print("Player 1's turn")
+
+        else:
+            playerID = "tempest"
+            printBoard(TERRITORY, EXPANSION1EnemyBoard)
+            atk(EXPANSION1, EXPANSION1EnemyBoard)
+            printBoard(TERRITORY, EXPANSION1EnemyBoard)
+            if counter >= 3:
+                game_set(playerID, EXPANSION1)
+            wait()
+            print("Player 1's turn:")
+            playerID = "ciel"
+            printBoard(TERRITORY, EXPANSION2EnemyBoard)
+            atk(EXPANSION2, EXPANSION2EnemyBoard)
+            printBoard(TERRITORY, EXPANSION2EnemyBoard)
+            if counter >= 3:
+                game_set(playerID, EXPANSION2)
+            wait()
+            print("Player 2's turn")
+        counter += 1
+        print(counter)
 
 def game_set(id, matrix):
 
@@ -171,42 +215,6 @@ def game_set(id, matrix):
                     print("Player 2 has sunk both of player 1's ships. Player 2 wins.")
                     quit()
 
-
-#running the game loop
-def pleiades(player):
-    counter = 0
-    while True:
-        if player == "Player 1":
-            playerID = "ciel"
-            printBoard(EXPANSION2EnemeyBoard)
-            atk(EXPANSION2, EXPANSION2EnemeyBoard)
-            printBoard(EXPANSION2EnemeyBoard)
-            if counter >= 3:
-                game_set(playerID, EXPANSION2)
-            wait()
-            playerID = "tempest"
-            printBoard(EXPANSION1EnemeyBoard)
-            atk(EXPANSION1, EXPANSION1EnemeyBoard)
-            printBoard(EXPANSION1EnemeyBoard)
-            if counter >= 3:
-                game_set(playerID, EXPANSION1)
-
-        else:
-            playerID = "tempest"
-            printBoard(EXPANSION1EnemeyBoard)
-            atk(EXPANSION1, EXPANSION1EnemeyBoard)
-            printBoard(EXPANSION1EnemeyBoard)
-            if counter >= 3:
-                game_set(playerID, EXPANSION1)
-            wait()
-            playerID = "ciel"
-            printBoard(EXPANSION2EnemeyBoard)
-            atk(EXPANSION2, EXPANSION2EnemeyBoard)
-            printBoard(EXPANSION2EnemeyBoard)
-            if counter >= 3:
-                game_set(playerID, EXPANSION2)
-        counter += 1
-
 def condCheck(paracausal):
     
     consciousness = 0
@@ -214,15 +222,17 @@ def condCheck(paracausal):
     diety = 1
 
     # If the format is correct (LetterNumber) & values are correct, returns correct
-    if type(paracausal[0]) == type(str) and type(paracausal[1]) == type(int):
+    if type(paracausal[0]) == type(str()) and type(int(paracausal[1])) == type(int()):
 
         # If they are within range (A-C) or (0-2)
-        if paracausal[0].upper() != "A" or paracausal[0].upper() != "B" or paracausal[0].upper() != "C":
+        if paracausal[0].upper() != "A" and paracausal[0].upper() != "B" and paracausal[0].upper() != "C":
 
+            print("c1")
             return consciousness
 
-        elif int(paracausal[1]) != 0 or int(paracausal[1]) != 1 or int(paracausal[1]) != 2:
+        elif int(paracausal[1]) != 0 and int(paracausal[1]) != 1 and int(paracausal[1]) != 2:
 
+            print("c2")
             return consciousness
 
         else:
@@ -230,14 +240,16 @@ def condCheck(paracausal):
             return diety
 
     # IF the format is wrong but values are correct, returns partially correct
-    elif type(paracausal[0]) == type(int) and type(paracausal[1]) == type(str):
+    elif type(int(paracausal[0])) == type(int()) and type(paracausal[1]) == type(str()):
 
-        if int(paracausal[0]) != 0 or int(paracausal[0]) != 1 or int(paracausal[0]) != 2:
+        if int(paracausal[0]) != 0 and int(paracausal[0]) != 1 and int(paracausal[0]) != 2:
 
+            print("c3")
             return consciousness
 
-        elif paracausal[1].upper() != "A" or paracausal[1].upper() != "B" or paracausal[1].upper() != "C":
+        elif paracausal[1].upper() != "A" and paracausal[1].upper() != "B" and paracausal[1].upper() != "C":
 
+            print("c4")
             return consciousness
 
         else:
@@ -246,14 +258,20 @@ def condCheck(paracausal):
     else:
 
         # If the values are wrong, returns incorrect
+        print("c5")
         return consciousness
 
 def coin_toss():
 
     result = random.randint(0,1)
     if result == 0:
+
+        print("Player 1's move.")
         return "Player 1"
+    
     else:
+
+        print("Player 2's move.")
         return "Player 2"
 
 # Combat functions
@@ -274,29 +292,32 @@ def atk(board, seenBoard):
                     shipCordX = convertLetterNum(shipCordX)
                 
                     ledList = board[shipCordX][shipCordY]
-                    enemyBoard = seenBoard[shipCordX][shipCordY]
                     if (ledList[0] == 1 and ledList[1] == 1) or (ledList[0] == 1 and ledList[1] == 0):
                         raise ZeroDivisionError
                     elif (ledList[0] == 0 and ledList[1] == 0): 
                         print("You have missed the target.")
                         board[shipCordX][shipCordY][0] = 1
                         board[shipCordX][shipCordY][1] = 1
-                        enemyBoard[shipCordX][shipCordY][0] = 1
-                        enemyBoard[shipCordX][shipCordY][1] = 1
+                        print(f'{shipCordX} {shipCordY}')
+                        seenBoard[shipCordX][shipCordY][0] = 1
+                        seenBoard[shipCordX][shipCordY][1] = 1
                     elif ledList[0] == 0 and ledList[1] == 1:
                         print("You have hit a ship!")
                         board[shipCordX][shipCordY][0] = 1
                         board[shipCordX][shipCordY][1] = 0
-                        enemyBoard[shipCordX][shipCordY][0] = 1
-                        enemyBoard[shipCordX][shipCordY][1] = 0
+                        print(f'{shipCordX} {shipCordY}')
+                        seenBoard[shipCordX][shipCordY][0] = 1
+                        seenBoard[shipCordX][shipCordY][1] = 0
+                    rbd = False
 
         except ZeroDivisionError:
             print("You have entered in a location that has already been hit.")
         except:
-            print("You have entered in invalid coordinates please try again.")
+            print("You have entered in invalid coordinates. Please try again.")
 
 
 # Main function
+
 def main():
 
     player1 = input("What is player 1's name: ")
@@ -312,10 +333,6 @@ def main():
     pleiades(player)
     # Split turns into player 1 and player 2 turns
     
-
-
-    
-
 
 
 
